@@ -4,8 +4,9 @@
   "private": true,
   "license": "ISC",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development next dev",
-    "build": "next build",
+    "dev": "NEXT_PUBLIC_DOMAIN_ENV=development next dev",
+    "test": "NEXT_PUBLIC_DOMAIN_ENV=test next build",
+    "build": "NEXT_PUBLIC_DOMAIN_ENV=production next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -30,7 +31,6 @@
     "@types/node": "18.15.11",
     "@types/react": "18.0.35",
     "@types/react-dom": "18.0.11",
-    "typescript": "5.0.4",
-    "cross-env": "7.0.3"
+    "typescript": "5.0.4"
   }
 }

@@ -6,10 +6,12 @@ module.exports = {
   images: {
     unoptimized: true
   },
-  // distDir: 'dist', // 自定义构建目录
   sassOptions: {
     // sass样式目录
     includePaths: [path.join(__dirname, './src/assets/css')]
+  },
+  experimental: {
+    outputStandalone: true
   },
   async rewrites() {
     // 重写请求地址以应对跨域

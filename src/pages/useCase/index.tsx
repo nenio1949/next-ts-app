@@ -3,7 +3,7 @@
  * @Author: yong.li
  * @Date: 2022-02-07 14:23:27
  * @LastEditors: yong.li
- * @LastEditTime: 2023-04-19 15:20:39
+ * @LastEditTime: 2023-04-19 15:31:21
  */
 import React, { useState, useEffect } from 'react'
 import { Table, Button, Tag, Dropdown } from 'antd'
@@ -229,7 +229,7 @@ const Home = () => {
       state: JSON.stringify(greCondition.state),
       source: greCondition.source,
       name: greCondition.name,
-      classification_id: greCondition.classification_id,
+      classification_id: greCondition.classification_id ? JSON.stringify(greCondition.classification_id) : null,
       size: pagination.pageSize,
       page: pagination.current
     }
