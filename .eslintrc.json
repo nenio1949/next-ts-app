@@ -1,3 +1,7 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": "next/core-web-vitals",
+  "rules": {
+    "react-hooks/exhaustive-deps": "off", // 关闭useEffect[]内必须有值的校验
+    "import/no-anonymous-default-export": "off" // 关闭必须单独导出函数的校验
+  }
 }
