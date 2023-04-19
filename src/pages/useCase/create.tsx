@@ -3,7 +3,7 @@
  * @Author: yong.li
  * @Date: 2022-02-07 14:30:11
  * @LastEditors: yong.li
- * @LastEditTime: 2023-04-19 10:36:04
+ * @LastEditTime: 2023-04-19 11:27:56
  */
 
 import { useEffect, useState } from 'react'
@@ -41,9 +41,7 @@ const Home = (props: IPorps) => {
   const { classifications, onCallbackParent } = props
   const [loading, setLoading] = useState(false)
   const [form] = Form.useForm()
-  const [classificationId, setClassificationId] = useState(
-    classifications.find((s: Classification) => s.default)?.id || classifications[0].id
-  )
+  const [classificationId, setClassificationId] = useState<number>()
   const [qiniuToken, setQiniuToken] = useState<string>('')
   const [fileList, setFileList] = useState<UploadFile[]>([])
   // 用例文件
@@ -66,6 +64,10 @@ const Home = (props: IPorps) => {
   useEffect(() => {
     getTaskProcess()
     handleGetQiniuToken()
+
+    if (classifications && classifications.length > 0) {
+      setClassificationId(classifications?.find((s: Classification) => s.default)?.id || classifications[0]?.id)
+    }
   }, [])
 
   // 自定义文件上传
@@ -150,13 +152,14 @@ const Home = (props: IPorps) => {
       >
         <Form.Item name="source" label="用例来源" rules={[{ required: true, message: '请选择用例来源！' }]}>
           <Radio.Group>
-            {GConfig.enum.useCaseSources.map((useCaseSource: EnumConfigObj) => {
-              return (
-                <Radio value={useCaseSource.value} key={useCaseSource.value}>
-                  {useCaseSource.label}
-                </Radio>
-              )
-            })}
+            {GConfig.enum.useCaseSources.length > 0 &&
+              GConfig.enum.useCaseSources.map((useCaseSource: EnumConfigObj) => {
+                return (
+                  <Radio value={useCaseSource.value} key={useCaseSource.value}>
+                    {useCaseSource.label}
+                  </Radio>
+                )
+              })}
           </Radio.Group>
         </Form.Item>
         <Form.Item name="classificationId" label="用例分类" rules={[{ required: true, message: '请选择用例分类！' }]}>
@@ -168,13 +171,15 @@ const Home = (props: IPorps) => {
               setClassificationId(value)
             }}
           >
-            {classifications.map((classification: Classification) => {
-              return (
-                <Option key={classification.id} value={classification.id}>
-                  {classification.name}
-                </Option>
-              )
-            })}
+            {classifications &&
+              classifications.length > 0 &&
+              classifications.map((classification: Classification) => {
+                return (
+                  <Option key={classification.id} value={classification.id}>
+                    {classification.name}
+                  </Option>
+                )
+              })}
           </Select>
         </Form.Item>
         <Form.Item

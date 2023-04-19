@@ -89,7 +89,9 @@ const splitUrlFileName = (fileUrl: string) => {
  */
 const setDocumentTitle = (title: string) => {
   const titleStr = GConfig.system.name
-  return (document.title = title ? `${title} - ${titleStr}` : titleStr)
+  if (typeof document !== 'undefined') {
+    return (document.title = title ? `${title} - ${titleStr}` : titleStr)
+  }
 }
 
 /**

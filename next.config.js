@@ -3,9 +3,9 @@ const path = require('path')
 
 module.exports = {
   reactStrictMode: true,
-  // images: {
-  //   unoptimized: true
-  // },
+  images: {
+    unoptimized: true
+  },
   // distDir: 'dist', // 自定义构建目录
   sassOptions: {
     // sass样式目录

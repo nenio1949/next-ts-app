@@ -5,8 +5,7 @@
   "license": "ISC",
   "scripts": {
     "dev": "cross-env NODE_ENV=development next dev",
-    "staging": "cross-env NODE_ENV=staging next build export",
-    "pro": "cross-env NODE_ENV=production next build export",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },

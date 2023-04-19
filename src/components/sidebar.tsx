@@ -10,9 +10,7 @@ const { Sider } = Layout
 const SideBar = () => {
   const router = useRouter()
 
-  const thisMenuStatus: string = utils.localstorage.get('_MENU_STATUS') || 'open'
-
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(thisMenuStatus === 'collapse')
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(false) // 是否收起
   const [defaultOpenKeys, setDefaultOpenKeys] = useState<string[]>([])
   const [selectedKeys, setSelectedKeys] = useState<string[]>([])
 
@@ -20,7 +18,7 @@ const SideBar = () => {
   const handleMenuCollapsed = () => {
     const currentValue = !isCollapsed
 
-    utils.localstorage.set('_MENU_STATUS', currentValue ? 'collapse' : 'open')
+    utils.localstorage.set('_MENU_STATUS', currentValue)
 
     setIsCollapsed(currentValue)
   }
@@ -39,7 +37,10 @@ const SideBar = () => {
     }
     setDefaultOpenKeys([selectMenuKeys[0]])
     setSelectedKeys([selectMenuKeys.join('_')])
-  }, [])
+
+    const menuStatus = utils.localstorage.get('_MENU_STATUS')
+    setIsCollapsed(menuStatus)
+  }, [router.pathname])
 
   return (
     <div className="d-sidebar">

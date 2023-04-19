@@ -3,7 +3,7 @@
  * @Author: yong.li
  * @Date: 2022-02-07 14:30:48
  * @LastEditors: yong.li
- * @LastEditTime: 2023-04-19 10:35:02
+ * @LastEditTime: 2023-04-19 11:32:40
  */
 
 import { useState, useEffect } from 'react'
@@ -34,9 +34,9 @@ const UpdateUnit = (props: IProps) => {
 
   const [form] = Form.useForm()
   const [loading, setLoading] = useState<boolean>(false)
-  const [state, setState] = useState<string>(useCase.state.id)
+  const [state, setState] = useState<string>(useCase?.state?.id)
   const [qiniuToken, setQiniuToken] = useState<string>('')
-  const [fileList, setFileList] = useState<UploadFile[]>(useCase.changeFiles)
+  const [fileList, setFileList] = useState<UploadFile[]>(useCase?.changeFiles)
   // 获取七牛token
   const handleGetQiniuToken = async () => {
     const token = await appStore.handleGetQiniuToken()
@@ -133,13 +133,14 @@ const UpdateUnit = (props: IProps) => {
               setState(e.target.value)
             }}
           >
-            {GConfig.enum.useCaseStates.map((useCaseState: EnumConfigObj) => {
-              return (
-                <Radio key={useCaseState.value} value={useCaseState.value}>
-                  {useCaseState.label}
-                </Radio>
-              )
-            })}
+            {GConfig.enum.useCaseStates.length > 0 &&
+              GConfig.enum.useCaseStates.map((useCaseState: EnumConfigObj) => {
+                return (
+                  <Radio key={useCaseState.value} value={useCaseState.value}>
+                    {useCaseState.label}
+                  </Radio>
+                )
+              })}
           </Radio.Group>
         </Form.Item>
         <Form.Item name="changeFiles" tooltip={'此项仅提供保存查看功能，无文件解析'} label="变更记录文件">

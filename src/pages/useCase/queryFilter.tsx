@@ -21,6 +21,8 @@ const QueryFilter = (props: FilterPorps) => {
   // 查询
   const handleSearch = () => {
     const newCondition = { ...condition, ...form.getFieldsValue() }
+    console.log('🚀 ~ file: queryFilter.tsx:24 ~ handleSearch ~ newCondition:', newCondition)
+
     setSelectedKeys && setSelectedKeys([])
     if (onCallbackParent) {
       onCallbackParent(newCondition)
@@ -50,13 +52,14 @@ const QueryFilter = (props: FilterPorps) => {
     >
       <Form.Item name="source" label="来源">
         <Select allowClear showSearch optionFilterProp="children" style={{ width: 150 }} placeholder="请选择来源">
-          {GConfig.enum.useCaseSources.map((source: EnumConfigObj) => {
-            return (
-              <Option value={source.value} key={source.value}>
-                {source.label}
-              </Option>
-            )
-          })}
+          {GConfig.enum.useCaseSources.length > 0 &&
+            GConfig.enum.useCaseSources.map((source: EnumConfigObj) => {
+              return (
+                <Option value={source.value} key={source.value}>
+                  {source.label}
+                </Option>
+              )
+            })}
         </Select>
       </Form.Item>
       <Form.Item name="classification_id" label="分类">
@@ -64,12 +67,16 @@ const QueryFilter = (props: FilterPorps) => {
           allowClear
           mode="multiple"
           style={{ minWidth: 210 }}
-          options={classifications.map((val: Classification) => {
-            return {
-              value: val.id,
-              label: val.name
-            }
-          })}
+          options={
+            classifications && classifications.length > 0
+              ? classifications.map((val: Classification) => {
+                  return {
+                    value: val.id,
+                    label: val.name
+                  }
+                })
+              : []
+          }
           placeholder="请选择分类"
         />
       </Form.Item>
@@ -97,7 +104,7 @@ const QueryFilter = (props: FilterPorps) => {
       <Form.Item>
         <Button onClick={() => handleOperate('mergeRecord')}>用例合并记录</Button>
       </Form.Item>
-      {!!selectedKeys.length && <Form.Item>已选择{selectedKeys.length}条将合并的用例</Form.Item>}
+      {selectedKeys && selectedKeys.length > 0 && <Form.Item>已选择{selectedKeys.length}条将合并的用例</Form.Item>}
     </Form>
   )
 }

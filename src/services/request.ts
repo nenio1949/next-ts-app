@@ -3,7 +3,7 @@
  * @Author: yong.li
  * @Date: 2023-03-06 15:06:57
  * @LastEditors: yong.li
- * @LastEditTime: 2023-04-18 15:37:50
+ * @LastEditTime: 2023-04-19 11:46:29
  */
 
 import axios, { AxiosRequestConfig } from 'axios'
@@ -128,7 +128,7 @@ export default async function axiosRequest(
           message.error(msg)
 
           // 直接跳转到登录页面（简单粗暴）
-          if (errcode === 401) {
+          if (errcode === 401 || errcode === 2) {
             Router.push({ pathname: '/login' })
           }
         }

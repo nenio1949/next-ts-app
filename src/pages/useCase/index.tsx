@@ -3,7 +3,7 @@
  * @Author: yong.li
  * @Date: 2022-02-07 14:23:27
  * @LastEditors: yong.li
- * @LastEditTime: 2023-04-18 17:38:25
+ * @LastEditTime: 2023-04-19 15:20:39
  */
 import React, { useState, useEffect } from 'react'
 import { Table, Button, Tag, Dropdown } from 'antd'
@@ -226,10 +226,10 @@ const Home = () => {
     }
 
     const requestData = {
-      state: JSON.stringify(condition.state),
-      source: condition.source,
-      name: condition.name,
-      classification_id: condition.classification_id,
+      state: JSON.stringify(greCondition.state),
+      source: greCondition.source,
+      name: greCondition.name,
+      classification_id: greCondition.classification_id,
       size: pagination.pageSize,
       page: pagination.current
     }
@@ -251,7 +251,7 @@ const Home = () => {
             width: '60%',
             component: null
           },
-          condition
+          greCondition
         }
       })
     } else {

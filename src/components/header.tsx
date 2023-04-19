@@ -129,6 +129,11 @@ const Header = () => {
     })
   }
 
+  // 跳转
+  const handlePushPage = (path: string) => {
+    Router.push({ pathname: path })
+  }
+
   const userInfoDOMs = () => {
     return (
       <>
@@ -193,9 +198,9 @@ const Header = () => {
   return (
     <>
       <div className="d-header">
-        <div className="d-header-left">
+        <div className="d-header-left" onClick={() => handlePushPage('/')}>
           <span className="d-logo">
-            <Image src={GConfig.system.logoUrl} alt="logo" />
+            <Image src={GConfig.system.logoUrl} alt="logo" preview={false} />
           </span>
           <span className="d-header-title" onClick={() => handleJumpToPage.bind('/welcome')}>
             {GConfig.system.name}
