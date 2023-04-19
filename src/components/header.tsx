@@ -245,7 +245,13 @@ const Header = () => {
             </li>
           </ul>
         </div>
-        <Modal title={null} footer={null} width={800} open={state.visible} onCancel={handleSwitchVisible}>
+        <Modal
+          title={`当前选中项目【${state.selectedProject?.name || '暂未选择'}】`}
+          footer={null}
+          width={800}
+          open={state.visible}
+          onCancel={handleSwitchVisible}
+        >
           <div style={{ minHeight: 300 }}>
             {!state.appLoading && state.projects.length === 0 && (
               <WarningUnit data="当前无任何可选项目" style={{ paddingTop: '10%' }} />
@@ -274,7 +280,9 @@ const Header = () => {
                                 key={project.id}
                                 span={8}
                                 onClick={() => handleSelectedProject(project)}
-                                className="d-header-project-item d-link"
+                                className={`d-header-project-item d-link ${
+                                  project.id === state.selectedProject?.id && 'd-project-selected'
+                                }`}
                               >
                                 {project.name}
                               </Col>

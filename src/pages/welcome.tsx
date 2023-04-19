@@ -3,13 +3,16 @@
  * @Author: yong.li
  * @Date: 2023-03-06 15:44:40
  * @LastEditors: yong.li
- * @LastEditTime: 2023-03-07 14:37:36
+ * @LastEditTime: 2023-04-19 10:29:54
  */
 
 import Image from 'next/image'
 import WelcomeImg from '@/assets/img/welcome.png'
+import utils from '@/utils'
 
 const Home = () => {
+  utils.operate.setDocumentTitle('欢迎页')
+
   return (
     <div className="d-container" style={{ height: '100%', backgroundColor: '#ffffff' }}>
       <div className="d-container-body" style={{ textAlign: 'center' }}>

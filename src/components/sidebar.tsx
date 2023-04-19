@@ -34,8 +34,6 @@ const SideBar = () => {
 
   useEffect(() => {
     const selectMenuKeys: Array<string> = utils.operate.splitUrlParams()
-    console.log('🚀 ~ file: sidebar.tsx:37 ~ useEffect ~ selectMenuKeys:', selectMenuKeys)
-
     if (selectMenuKeys.length === 0) {
       Router.push({ pathname: '/' })
     }

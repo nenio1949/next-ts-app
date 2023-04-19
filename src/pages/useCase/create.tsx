@@ -3,7 +3,7 @@
  * @Author: yong.li
  * @Date: 2022-02-07 14:30:11
  * @LastEditors: yong.li
- * @LastEditTime: 2023-04-18 09:19:27
+ * @LastEditTime: 2023-04-19 10:36:04
  */
 
 import { useEffect, useState } from 'react'
@@ -135,7 +135,14 @@ const Home = (props: IPorps) => {
         name="create"
         onFinish={handleSubmit}
         scrollToFirstError
-        {...GConfig.formItemLayout}
+        {...{
+          labelCol: {
+            span: 5
+          },
+          wrapperCol: {
+            span: 18
+          }
+        }}
         initialValues={{
           source: GConfig.enum.useCaseSources[0].value,
           classificationId

@@ -1,7 +1,7 @@
 import { Empty } from 'antd'
 import { useRouter } from 'next/router'
 
-const NoMatch = () => {
+export default function NoMatch() {
   const router = useRouter()
   const { message } = router.query
   return (
@@ -11,4 +11,4 @@ const NoMatch = () => {
   )
 }
 
-export default NoMatch
+NoMatch.noLayout = true

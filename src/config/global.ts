@@ -40,7 +40,7 @@ const GConfig: IGConfig = {
   uploadQiNiuUrl: 'https://upload.qiniup.com', // 七牛上传地址
   manualUrl: 'https://www.yuque.com/mu2e9y/qk2tny', // 操作手册地址
   system: {
-    name: '富能通nextjs模板项目',
+    name: 'nextjs模板项目',
     logoUrl: 'http://docs.antjob.ink/tct/logo/en-full.png?imageView2/2/h/60',
     version: {
       code: packageJson.version,

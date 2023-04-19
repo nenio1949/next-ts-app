@@ -235,6 +235,17 @@ ant-popover .ant-popover-inner-content {
   }
 }
 
+.d-project-selected {
+  background-color: #5b92f1;
+  color: #ffffff;
+
+  &:hover {
+    color: #d7d9ff;
+  }
+}
+
+
+
 //激活变蓝
 .d-element-active_blue {
   &:before {

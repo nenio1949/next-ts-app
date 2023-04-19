@@ -3,7 +3,7 @@
  * @Author: yong.li
  * @Date: 2022-02-07 14:30:48
  * @LastEditors: yong.li
- * @LastEditTime: 2023-04-18 09:19:46
+ * @LastEditTime: 2023-04-19 10:35:02
  */
 
 import { useState, useEffect } from 'react'
@@ -92,7 +92,14 @@ const UpdateUnit = (props: IProps) => {
         name="update"
         onFinish={handleSubmit}
         scrollToFirstError
-        {...GConfig.formItemLayout}
+        {...{
+          labelCol: {
+            span: 5
+          },
+          wrapperCol: {
+            span: 18
+          }
+        }}
         initialValues={{
           source: GConfig.enum.useCaseSources[0].value,
           state,
@@ -194,7 +201,20 @@ const ContrastUnit = (props: IProps) => {
   }
   return (
     <Spin spinning={loading}>
-      <Form form={form} name="contrast" onFinish={handleSubmit} scrollToFirstError {...GConfig.formItemLayout}>
+      <Form
+        form={form}
+        name="contrast"
+        onFinish={handleSubmit}
+        scrollToFirstError
+        {...{
+          labelCol: {
+            span: 5
+          },
+          wrapperCol: {
+            span: 18
+          }
+        }}
+      >
         <Form.Item name="sourceName" label="用例来源">
           <Input readOnly bordered={false} />
         </Form.Item>
