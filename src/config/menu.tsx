@@ -3,7 +3,7 @@
  * @Author: yong.li
  * @Date: 2022-02-07 10:33:43
  * @LastEditors: yong.li
- * @LastEditTime: 2023-04-18 16:17:07
+ * @LastEditTime: 2023-04-20 10:55:37
  */
 
 import {
@@ -21,12 +21,12 @@ import { MenuProps } from 'antd'
 
 const menuData: MenuProps['items'] = [
   {
-    key: 'welcome',
+    key: '/',
     label: '首页',
     icon: <BarChartOutlined />
   },
   {
-    key: 'useCase',
+    key: '/useCase',
     label: '基础用例库管理',
     icon: <DatabaseOutlined />
   },

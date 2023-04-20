@@ -3,7 +3,7 @@
  * @Author: yong.li
  * @Date: 2022-02-07 14:30:11
  * @LastEditors: yong.li
- * @LastEditTime: 2023-04-19 11:27:56
+ * @LastEditTime: 2023-04-20 10:09:34
  */
 
 import { useEffect, useState } from 'react'
@@ -16,7 +16,6 @@ import { region, upload } from 'qiniu-js'
 import UseCaseUpload from '@/components/upload/useCaseUpload'
 import { Classification } from './type'
 import { Extra } from '@/components/upload/type'
-import { EnumConfigObj } from '@/config/enum'
 import GConfig from '@/config/global'
 
 const { Option } = Select

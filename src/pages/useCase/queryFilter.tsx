@@ -1,6 +1,5 @@
 import { Button, Form, Input, Select } from 'antd'
 import { FilterPorps, Classification } from './type'
-import { EnumConfigObj } from '@/config/enum'
 import GConfig from '@/config/global'
 
 const { Option } = Select
@@ -84,7 +83,13 @@ const QueryFilter = (props: FilterPorps) => {
         <Input allowClear placeholder="请输入用例名称" />
       </Form.Item>
       <Form.Item name="state" label="状态">
-        <Select mode="multiple" allowClear options={GConfig.enum.useCaseSearchStates} placeholder="请选择状态" />
+        <Select
+          style={{ minWidth: 210 }}
+          mode="multiple"
+          allowClear
+          options={GConfig.enum.useCaseSearchStates}
+          placeholder="请选择状态"
+        />
       </Form.Item>
       <Form.Item>
         <Button htmlType="submit">查询</Button>

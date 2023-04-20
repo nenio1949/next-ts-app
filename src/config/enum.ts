@@ -3,22 +3,8 @@
  * @Author: yong.li
  * @Date: 2022-01-21 16:03:03
  * @LastEditors: yong.li
- * @LastEditTime: 2023-03-08 14:32:30
+ * @LastEditTime: 2023-04-20 10:09:02
  */
-
-export interface EnumConfigObj {
-  value: string
-  label: string
-}
-
-export interface EnumConfig {
-  useCaseSources: Array<EnumConfigObj>
-  useCaseStates: Array<EnumConfigObj>
-  useCaseSearchStates: Array<EnumConfigObj>
-  useCaseUpdateTypes: Array<EnumConfigObj>
-  useCaseAttributes: Array<EnumConfigObj>
-  useCaseTestResults: Array<EnumConfigObj>
-}
 
 const enumConfig: EnumConfig = {
   /** 数据来源 */

@@ -32,11 +32,12 @@ const SideBar = () => {
 
   useEffect(() => {
     const selectMenuKeys: Array<string> = utils.operate.splitUrlParams()
+    console.log('🚀 ~ file: sidebar.tsx:35 ~ useEffect ~ selectMenuKeys:', router)
     if (selectMenuKeys.length === 0) {
       Router.push({ pathname: '/' })
     }
     setDefaultOpenKeys([selectMenuKeys[0]])
-    setSelectedKeys([selectMenuKeys.join('_')])
+    setSelectedKeys([router.pathname])
 
     const menuStatus = utils.localstorage.get('_MENU_STATUS')
     setIsCollapsed(menuStatus)

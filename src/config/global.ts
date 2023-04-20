@@ -1,37 +1,5 @@
-import enumConfig, { EnumConfig } from './enum'
+import enumConfig from './enum'
 import packageJson from '../../package.json'
-
-interface IGConfig {
-  serverHost?: string
-  docHost: string
-  filePreviewServiceHost: string
-  uploadQiNiuUrl: string
-  manualUrl: string
-  system: {
-    name: string
-    logoUrl: string
-    version: {
-      code: string
-      name?: string
-    }
-  }
-  maxUploadSize: number
-  enum: EnumConfig
-  uploadTemplateUrl: {
-    useCase: {
-      up: string
-      down: string
-    }
-  }
-  formItemLayout: {
-    labelCol: {
-      span: number
-    }
-    wrapperCol: {
-      span: number
-    }
-  }
-}
 
 const GConfig: IGConfig = {
   serverHost: process.env.NEXT_PUBLIC_SERVER_HOST,

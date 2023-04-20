@@ -3,7 +3,7 @@
  * @Author: yong.li
  * @Date: 2022-02-07 14:30:48
  * @LastEditors: yong.li
- * @LastEditTime: 2023-04-19 11:32:40
+ * @LastEditTime: 2023-04-20 10:09:45
  */
 
 import { useState, useEffect } from 'react'
@@ -12,7 +12,6 @@ import { useStore, observer } from '@/stores/hook'
 import CommonUpload from '@/components/upload/commonUpload'
 import QiNiuUpload from '@/components/upload/qiniuUpload'
 import api from '@/services/api'
-import { EnumConfigObj } from '@/config/enum'
 import { Classification, UseCase } from './type'
 import GConfig from '@/config/global'
 

@@ -3,7 +3,7 @@
  * @Author: yong.li
  * @Date: 2022-02-07 14:23:27
  * @LastEditors: yong.li
- * @LastEditTime: 2023-04-19 15:31:21
+ * @LastEditTime: 2023-04-20 10:35:19
  */
 import React, { useState, useEffect } from 'react'
 import { Table, Button, Tag, Dropdown } from 'antd'
@@ -31,6 +31,7 @@ const Home = () => {
   const { appStore } = useStore()
 
   const { baseUseCase: hasOperateAuth } = utils.operate.getUserModuleGroupAuth(['baseUseCase'])
+
   const [state, setState] = useState<IStates>({
     selectedKeys: [],
     visible: false,
