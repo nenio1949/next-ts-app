@@ -52,6 +52,7 @@ const SideBar = () => {
         selectedKeys={selectedKeys}
         onClick={({ key }) => handleClick(key)}
         inlineCollapsed={isCollapsed}
+        style={{ width: isCollapsed ? 80 : 240 }}
       />
       <div className="d-sidebar-collapse">
         <Button type="text" block onClick={handleMenuCollapsed} style={{ padding: '2px 0' }}>

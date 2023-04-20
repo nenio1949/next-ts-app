@@ -3,7 +3,7 @@ import WelcomeImg from '@/assets/img/welcome.png'
 import utils from '@/utils'
 
 const Home = () => {
-  utils.operate.setDocumentTitle('欢迎页')
+  utils.operate.setDocumentTitle('首页')
 
   return (
     <div className="d-container" style={{ height: '100%', backgroundColor: '#ffffff' }}>
