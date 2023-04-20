@@ -2,13 +2,24 @@
   "name": "next-ts-app",
   "version": "0.1.0",
   "private": true,
-  "license": "ISC",
+  "license": "MIT",
+  "keywords": [
+    "nextjs",
+    "react",
+    "typescript",
+    "antd",
+    "axios",
+    "mobx",
+    "eslint",
+    "prettier"
+  ],
   "scripts": {
     "dev": "NEXT_PUBLIC_DOMAIN_ENV=development next dev",
     "test": "NEXT_PUBLIC_DOMAIN_ENV=test next build",
     "build": "NEXT_PUBLIC_DOMAIN_ENV=production next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@types/crypto-js": "4.1.1",
@@ -28,9 +39,18 @@
     "sass": "1.62.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.6.1",
+    "@commitlint/config-conventional": "^17.6.1",
     "@types/node": "18.15.11",
     "@types/react": "18.0.35",
     "@types/react-dom": "18.0.11",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.1",
     "typescript": "5.0.4"
+  },
+  "lint-staged": {
+    "*.{tsx,ts,js,jsx}": [
+      "yarn lint"
+    ]
   }
 }

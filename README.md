@@ -30,6 +30,7 @@ yarn install
 │   │   ├── header.tsx
 │   │   ├── layout.tsx
 │   │   ├── sidebar.tsx
+│   │   ├── warning.tsx
 │   │   └── upload
 │   ├── config                                                                # 公共配置
 │   │   ├── enum.ts
@@ -41,7 +42,6 @@ yarn install
 │   │   ├── 404.tsx
 │   │   ├── _app.tsx                                                          # 入口页面
 │   │   ├── _document.tsx
-│   │   ├── common
 │   │   ├── index.tsx                                                         # 首页
 │   │   ├── laboratoryTest
 │   │   ├── login.tsx
@@ -64,3 +64,22 @@ yarn install
 └── yarn.lock
 ```
 
+## 环境变量配置
+先在vite-env.d.ts中声明变量，然后再.env.[development|test|production]中配置
+
+  - development: 开发环境
+  - test: 测试环境
+  - production: 生产环境
+
+使用: process.env.[环境变量]  参考公共配置`global.ts`
+
+查看文档：https://cn.vitejs.dev/guide/env-and-mode.html
+
+## 接口访问代理
+若后端未进行跨域处理，可修改`next.config.js`文件中修改source、 destination实现跨域访问
+
+## 命名
+文件及文件夹命名统一采用小驼峰，组件名称统一采用大驼峰
+
+## 格式校验
+所有参数必须先声明再使用，严禁参数声明使用any，遵循eslint+prettier校验规则，使用`yarn lint`命令可以校验是否合规，请在代码提交前检查代码规范性，保证团队高效写作及高可维护性
