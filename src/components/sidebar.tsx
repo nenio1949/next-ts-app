@@ -11,7 +11,7 @@ const SideBar = () => {
   const router = useRouter()
 
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false) // 是否收起
-  const [defaultOpenKeys, setDefaultOpenKeys] = useState<string[]>([])
+  const [openKeys, setOpenKeys] = useState<string[]>(['/' + router.pathname.split('/')[1]])
   const [selectedKeys, setSelectedKeys] = useState<string[]>([])
 
   // 处理菜单折叠
@@ -24,6 +24,8 @@ const SideBar = () => {
   }
 
   const handleClick = (key: string) => {
+    console.log('🚀 ~ file: sidebar.tsx:27 ~ handleClick ~ key:', key)
+
     if (key) {
       Router.push({ pathname: key })
       setSelectedKeys([key])
@@ -31,12 +33,9 @@ const SideBar = () => {
   }
 
   useEffect(() => {
-    const selectMenuKeys: Array<string> = utils.operate.splitUrlParams()
-    console.log('🚀 ~ file: sidebar.tsx:35 ~ useEffect ~ selectMenuKeys:', router)
-    if (selectMenuKeys.length === 0) {
-      Router.push({ pathname: '/' })
-    }
-    setDefaultOpenKeys([selectMenuKeys[0]])
+    const openKey = '/' + router.pathname.split('/')[1]
+    console.log('🚀 ~ file: sidebar.tsx:37 ~ useEffect ~ openKey:', openKey)
+    setOpenKeys([openKey])
     setSelectedKeys([router.pathname])
 
     const menuStatus = utils.localstorage.get('_MENU_STATUS')
@@ -45,16 +44,16 @@ const SideBar = () => {
 
   return (
     <div className="d-sidebar">
-      <Sider collapsible collapsed={isCollapsed} trigger={null} theme="light" width={240}>
-        <Menu
-          mode="inline"
-          items={menuData}
-          defaultOpenKeys={defaultOpenKeys}
-          defaultSelectedKeys={selectedKeys}
-          selectedKeys={selectedKeys}
-          onClick={({ key }) => handleClick(key)}
-        />
-      </Sider>
+      <Menu
+        mode="inline"
+        items={menuData}
+        defaultOpenKeys={openKeys}
+        // openKeys={openKeys}
+        defaultSelectedKeys={selectedKeys}
+        selectedKeys={selectedKeys}
+        onClick={({ key }) => handleClick(key)}
+        inlineCollapsed={isCollapsed}
+      />
       <div className="d-sidebar-collapse">
         <Button type="text" block onClick={handleMenuCollapsed} style={{ padding: '2px 0' }}>
           {React.createElement(isCollapsed ? MenuUnfoldOutlined : MenuFoldOutlined)}

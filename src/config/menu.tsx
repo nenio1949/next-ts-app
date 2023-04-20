@@ -3,7 +3,7 @@
  * @Author: yong.li
  * @Date: 2022-02-07 10:33:43
  * @LastEditors: yong.li
- * @LastEditTime: 2023-04-20 10:55:37
+ * @LastEditTime: 2023-04-20 11:14:44
  */
 
 import {
@@ -41,28 +41,28 @@ const menuData: MenuProps['items'] = [
     icon: <TabletOutlined />
   },
   {
-    key: 'laboratory-test',
+    key: '/laboratoryTest',
     label: '实验室测试',
     icon: <ProjectOutlined />,
     children: [
       {
-        key: 'laboratory-test_use-case',
+        key: '/laboratoryTest/useCase',
         label: '用例管理'
       },
       {
-        key: 'laboratory-test_project-version',
+        key: '/laboratoryTest/statistics',
         label: '数据统计'
       },
       {
-        key: 'laboratory-test_test-table',
+        key: '/laboratoryTest/testTable',
         label: '测试表格管理'
       },
       {
-        key: 'laboratory-test_test-report',
+        key: '/laboratoryTest/testReport',
         label: '测试报告管理'
       },
       {
-        key: 'laboratory-test_combine-investigation',
+        key: '/laboratoryTest/combineInvestigation',
         label: '实验室综合联调'
       }
     ]
