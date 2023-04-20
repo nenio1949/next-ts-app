@@ -1,6 +1,6 @@
 import { Layout } from 'antd'
 import { useStore, observer } from '@/stores/hook'
-import WarningUnit from '@/pages/common/warning'
+import WarningUnit from '@/components/warning'
 import dynamic from 'next/dynamic'
 // import HeaderUnit from './header'
 import SidebarUnit from './sidebar'

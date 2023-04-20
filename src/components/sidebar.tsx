@@ -48,7 +48,6 @@ const SideBar = () => {
         mode="inline"
         items={menuData}
         defaultOpenKeys={openKeys}
-        // openKeys={openKeys}
         defaultSelectedKeys={selectedKeys}
         selectedKeys={selectedKeys}
         onClick={({ key }) => handleClick(key)}
