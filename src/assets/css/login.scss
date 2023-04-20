@@ -1,0 +1,121 @@
+.d-login {
+  max-width: 100%;
+  min-width: 550px;
+  height: 100%;
+  background-color: #3D3B51;
+  padding: 5%;
+  box-sizing: border-box;
+
+  &-container {
+    position: relative;
+    margin: 0 auto;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    background-color: #C4C0D9;
+    border-radius: 15px;
+    box-shadow: 0 0 30px #7E7AAA;
+  }
+
+  &-left {
+    flex: 1;
+    // background-color: #F0F2F5;
+    position: relative;
+
+    .d-login-bg-1 {
+      position: absolute;
+      z-index: 1;
+      height: 20%;
+      left: 40%;
+      top: 3%;
+      opacity: .5;
+    }
+
+    .d-login-bg-2 {
+      position: absolute;
+      right: 2%;
+      top: 5%;
+      z-index: 2;
+      width: 40%;
+      opacity: .05;
+    }
+
+    .d-login-bg-3 {
+      position: absolute;
+      z-index: 1;
+      bottom: 2%;
+      left: 3%;
+      height: 76%;
+      max-width: 100%;
+      opacity: .8;
+    }
+  }
+
+  &-right-bg {
+    position: absolute;
+    z-index: 1;
+    right: 0;
+    top: 0;
+    width: 500px;
+    height: 100%;
+    border-radius: 15px;
+    padding: 10% 15px 15px 5%;
+    background-color: #fff;
+    opacity: .9;
+    box-sizing: border-box;
+  }
+
+  &-right {
+    position: absolute;
+    z-index: 10;
+    right: 0;
+    top: 0;
+    width: 500px;
+    height: 100%;
+    border-radius: 15px;
+    padding: 5% 50px;
+    overflow: auto;
+    box-sizing: border-box;
+
+    .d-login-title {
+      font-size: 30px;
+      font-weight: 600;
+    }
+
+    .d-login-sub-title {
+      font-size: 24px;
+      font-weight: 500;
+    }
+  }
+
+  &-form {
+    padding: 15px 0;
+    margin-top: 15px;
+
+    &-item {
+      border-left: 4px solid;
+      padding: 5px 5px 15px 5px;
+
+      .ant-form-item {
+        margin: 0;
+        padding-top: 5px;
+        border-bottom: 1px dashed #DDD;
+
+        input {
+          border: 0;
+          background: rgba(255, 255, 255, .3);
+          outline: none;
+        }
+      }
+
+      .ant-form-item-explain {
+        padding-left: 12px;
+      }
+
+      span {
+        padding-left: 10px;
+      }
+    }
+  }
+}
