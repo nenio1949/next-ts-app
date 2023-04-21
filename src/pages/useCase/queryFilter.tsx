@@ -19,8 +19,7 @@ const QueryFilter = (props: FilterPorps) => {
   const [form] = Form.useForm()
   // 查询
   const handleSearch = () => {
-    const newCondition = { ...condition, ...form.getFieldsValue() }
-    console.log('🚀 ~ file: queryFilter.tsx:24 ~ handleSearch ~ newCondition:', newCondition)
+    const newCondition = { ...condition, ...form.getFieldsValue(), count: condition.count + 1 }
 
     setSelectedKeys && setSelectedKeys([])
     if (onCallbackParent) {
@@ -36,7 +35,8 @@ const QueryFilter = (props: FilterPorps) => {
       onCallbackParent({
         ...condition,
         ...res,
-        state: ['natural', 'generating']
+        state: ['natural', 'generating'],
+        count: condition.count - 1
       })
   }
   return (

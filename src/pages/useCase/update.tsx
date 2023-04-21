@@ -3,7 +3,7 @@
  * @Author: yong.li
  * @Date: 2022-02-07 14:30:48
  * @LastEditors: yong.li
- * @LastEditTime: 2023-04-20 10:09:45
+ * @LastEditTime: 2023-04-21 14:19:51
  */
 
 import { useState, useEffect } from 'react'
@@ -14,10 +14,12 @@ import QiNiuUpload from '@/components/upload/qiniuUpload'
 import api from '@/services/api'
 import { Classification, UseCase } from './type'
 import GConfig from '@/config/global'
+import { useQuery } from 'react-query'
 
 interface IProps {
   classifications: Classification[]
   useCase: UseCase
+  qiniuToken?: string
   onCallbackParent: () => void
 }
 
@@ -29,21 +31,20 @@ interface UpdateParams {
 const UpdateUnit = (props: IProps) => {
   const { appStore } = useStore()
 
-  const { classifications, useCase, onCallbackParent } = props
+  const { classifications, useCase, qiniuToken, onCallbackParent } = props
 
   const [form] = Form.useForm()
   const [loading, setLoading] = useState<boolean>(false)
   const [state, setState] = useState<string>(useCase?.state?.id)
-  const [qiniuToken, setQiniuToken] = useState<string>('')
   const [fileList, setFileList] = useState<UploadFile[]>(useCase?.changeFiles)
-  // 获取七牛token
-  const handleGetQiniuToken = async () => {
-    const token = await appStore.handleGetQiniuToken()
-    setQiniuToken(token)
-  }
+
+  const qiniuTokenQuery = useQuery({
+    queryKey: ['qiniuToken'],
+    queryFn: () => appStore.handleGetQiniuToken(),
+    enabled: !qiniuToken
+  })
 
   useEffect(() => {
-    handleGetQiniuToken()
     form.setFieldsValue({
       sourceName: useCase.source?.name,
       classificationName: useCase.classification?.name,
@@ -146,7 +147,7 @@ const UpdateUnit = (props: IProps) => {
           <QiNiuUpload
             multiple
             isPreview
-            qiniuToken={qiniuToken}
+            qiniuToken={qiniuToken || qiniuTokenQuery.data || ''}
             defaultFileList={fileList}
             onCallbackParent={qiniuUploadCallback}
             onCallbackLoading={(loading: boolean) => setLoading(loading)}

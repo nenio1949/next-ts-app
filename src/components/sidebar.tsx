@@ -24,8 +24,6 @@ const SideBar = () => {
   }
 
   const handleClick = (key: string) => {
-    console.log('🚀 ~ file: sidebar.tsx:27 ~ handleClick ~ key:', key)
-
     if (key) {
       Router.push({ pathname: key })
       setSelectedKeys([key])
@@ -34,7 +32,6 @@ const SideBar = () => {
 
   useEffect(() => {
     const openKey = '/' + router.pathname.split('/')[1]
-    console.log('🚀 ~ file: sidebar.tsx:37 ~ useEffect ~ openKey:', openKey)
     setOpenKeys([openKey])
     setSelectedKeys([router.pathname])
 

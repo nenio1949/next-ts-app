@@ -8,6 +8,7 @@ import WarningUnit from '@/components/warning'
 import Router from 'next/router'
 import GConfig from '@/config/global'
 import utils from '@/utils'
+import { useQuery } from 'react-query'
 
 interface ProjectHash {
   [key: string]: Array<Project>
@@ -34,6 +35,18 @@ const Header = () => {
   })
   const [open, setOpen] = useState(false)
   const userInfo = utils.localstorage.get('_USER_INFO')
+  const currentSelectedProject = utils.localstorage.get('_SELECTED_PROJECT')
+
+  useQuery({
+    queryKey: ['userAuths'],
+    queryFn: () => handleUserAuths(currentSelectedProject.id),
+    enabled: currentSelectedProject?.id > 0
+  })
+
+  useQuery({
+    queryKey: ['projects'],
+    queryFn: () => handleGetProjects
+  })
 
   useEffect(() => {
     handleInit()
@@ -41,15 +54,15 @@ const Header = () => {
 
   /** 初始化 */
   const handleInit = () => {
-    const currentSelectedProject = utils.localstorage.get('_SELECTED_PROJECT')
-    if (currentSelectedProject) {
-      setState((prev) => {
-        return { ...prev, selectedProject: currentSelectedProject }
-      })
-      handleUserAuths(currentSelectedProject.id)
-    }
+    // const currentSelectedProject = utils.localstorage.get('_SELECTED_PROJECT')
+    // if (currentSelectedProject) {
+    //   setState((prev) => {
+    //     return { ...prev, selectedProject: currentSelectedProject }
+    //   })
+    //   handleUserAuths(currentSelectedProject.id)
+    // }
     handleCheckLogin()
-    handleGetProjects()
+    // handleGetProjects()
   }
 
   // 检查是否登录

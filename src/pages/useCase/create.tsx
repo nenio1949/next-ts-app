@@ -3,7 +3,7 @@
  * @Author: yong.li
  * @Date: 2022-02-07 14:30:11
  * @LastEditors: yong.li
- * @LastEditTime: 2023-04-20 10:09:34
+ * @LastEditTime: 2023-04-21 14:30:05
  */
 
 import { useEffect, useState } from 'react'
@@ -17,11 +17,13 @@ import UseCaseUpload from '@/components/upload/useCaseUpload'
 import { Classification } from './type'
 import { Extra } from '@/components/upload/type'
 import GConfig from '@/config/global'
+import { useQuery } from 'react-query'
 
 const { Option } = Select
 
 interface IPorps {
   classifications: Classification[]
+  qiniuToken?: string
   onCallbackParent: () => void
 }
 
@@ -37,33 +39,28 @@ interface FormParams {
 const Home = (props: IPorps) => {
   const { appStore } = useStore()
 
-  const { classifications, onCallbackParent } = props
+  const { classifications, qiniuToken, onCallbackParent } = props
   const [loading, setLoading] = useState(false)
   const [form] = Form.useForm()
   const [classificationId, setClassificationId] = useState<number>()
-  const [qiniuToken, setQiniuToken] = useState<string>('')
   const [fileList, setFileList] = useState<UploadFile[]>([])
   // 用例文件
   const [useCaseFileList, setUseCaseFileList] = useState<UploadFile[]>([])
-  const [isGenerateFile, setIsGenerateFile] = useState<boolean>(false)
-  // 获取当前是否存在文件解析任务（后端文件解析只能单线程）
-  const getTaskProcess = async () => {
-    const { errcode, data }: ApiResponse = await api.getTaskProcess()
-    if (errcode === 0) {
-      setIsGenerateFile(data?.generateFile)
-    }
-  }
-  // 获取七牛token
-  const handleGetQiniuToken = async () => {
-    const token = await appStore.handleGetQiniuToken()
-    if (token) {
-      setQiniuToken(token)
-    }
-  }
-  useEffect(() => {
-    getTaskProcess()
-    handleGetQiniuToken()
 
+  // 七牛token
+  const qiniuTokenQuery = useQuery({
+    queryKey: ['qiniuToken'],
+    queryFn: () => appStore.handleGetQiniuToken(),
+    enabled: !qiniuToken
+  })
+
+  // 是否存在未完成的咏柳解析任务
+  const hasTaskProcessQuery = useQuery({
+    queryKey: ['hasTaskProcess'],
+    queryFn: () => api.getTaskProcess()
+  })
+
+  useEffect(() => {
     if (classifications && classifications.length > 0) {
       setClassificationId(classifications?.find((s: Classification) => s.default)?.id || classifications[0]?.id)
     }
@@ -85,7 +82,7 @@ const Home = (props: IPorps) => {
       fname: file.name, // 文件原文件名
       mimeType: undefined // 用来限制上传文件类型，为 null 时表示不对文件类型限制；
     }
-    return upload(file, key, qiniuToken, putExtra, config)
+    return upload(file, key, qiniuToken || qiniuTokenQuery.data || '', putExtra, config)
   }
   // 提交
   const handleSubmit = async (values: FormParams) => {
@@ -130,7 +127,9 @@ const Home = (props: IPorps) => {
   }
   return (
     <Spin spinning={loading}>
-      {isGenerateFile && <Alert message="存在未完成的用例库文件解析任务，请稍后再新增！" type="warning" />}
+      {hasTaskProcessQuery.data?.data.generateFile && (
+        <Alert message="存在未完成的用例库文件解析任务，请稍后再新增！" type="warning" />
+      )}
       <Form
         form={form}
         name="create"
@@ -202,14 +201,19 @@ const Home = (props: IPorps) => {
         <Form.Item name="changeFiles" tooltip={'此项仅提供保存查看功能，无文件解析'} label="变更记录文件">
           <QiNiuUpload
             multiple
-            qiniuToken={qiniuToken}
+            qiniuToken={qiniuToken || qiniuTokenQuery.data || ''}
             defaultFileList={fileList}
             onCallbackParent={(files) => qiniuUploadCallback(files)}
             onCallbackLoading={(loading: boolean) => setLoading(loading)}
           />
         </Form.Item>
         <div className="d-drawer-footer-sticky">
-          <Button type="primary" htmlType="submit" loading={loading} disabled={loading || isGenerateFile}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={loading}
+            disabled={loading || hasTaskProcessQuery.data?.data.generateFile}
+          >
             提交
           </Button>
         </div>

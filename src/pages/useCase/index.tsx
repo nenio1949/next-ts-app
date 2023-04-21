@@ -3,17 +3,19 @@
  * @Author: yong.li
  * @Date: 2022-02-07 14:23:27
  * @LastEditors: yong.li
- * @LastEditTime: 2023-04-20 10:35:19
+ * @LastEditTime: 2023-04-21 17:30:03
  */
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, ReactNode } from 'react'
 import { Table, Button, Tag, Dropdown } from 'antd'
 import type { MenuProps } from 'antd'
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table'
 import dynamic from 'next/dynamic'
 import api from '@/services/api'
 import { useStore, observer } from '@/stores/hook'
-import { Condition, DisabledStateText, UseCase, IStates } from './type'
+import { DisabledStateText, UseCase, IStates } from './type'
+import { useQuery } from 'react-query'
 import utils from '@/utils'
+import Router from 'next/router'
 
 const QueryFilterUnit = dynamic(import('./queryFilter'), { ssr: false })
 const DrawerUnit = dynamic(import('@/components/drawer'))
@@ -37,9 +39,6 @@ const Home = () => {
     visible: false,
     loading: false,
     hasOperateAuth: hasOperateAuth,
-    classifications: [], // 用例分类
-    qiniuToken: '',
-    useCases: [], // 基础用例数据
     columns: [],
     pagination: {
       // 分页
@@ -53,6 +52,7 @@ const Home = () => {
       showSizeChanger: true // 是否展示pageSize切换器
     },
     condition: {
+      count: 1,
       state: ['natural', 'generating'],
       source: '',
       name: '',
@@ -65,18 +65,29 @@ const Home = () => {
     }
   })
 
+  const classificationsQuery = useQuery({
+    queryKey: ['classifications'],
+    queryFn: () => appStore.handleGetConfigurations('classifications')
+  })
+
+  const qiniuTokenQuery = useQuery({
+    queryKey: ['qiniuToken'],
+    queryFn: () => appStore.handleGetQiniuToken()
+  })
+
+  const {
+    isLoading,
+    data: useCases,
+    refetch
+  } = useQuery({
+    queryKey: ['useCases', { condition: state.condition }], // 查询依赖condition、pagination变量
+    queryFn: () => handleGetPageDatas()
+  })
+
+  /** 勾选变化 */
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     setState((prevState) => {
       return { ...prevState, selectedKeys: [...newSelectedRowKeys] }
-    })
-  }
-
-  // 设置初始化数据
-  const handleInitSetting = async () => {
-    const classifications = await appStore.handleGetConfigurations('classifications')
-    const qiniuToken = await appStore.handleGetQiniuToken()
-    setState((prevState) => {
-      return { ...prevState, classifications, qiniuToken }
     })
   }
 
@@ -122,7 +133,7 @@ const Home = () => {
         dataIndex: 'version',
         key: 'version',
         render: (text, record) => {
-          return <a onClick={() => handleOperate('list', record)}>{text || '/'}</a>
+          return <a onClick={() => handleOperate('detail', record)}>{text || '/'}</a>
         }
       },
       {
@@ -219,21 +230,18 @@ const Home = () => {
   }
 
   // 获取分页数据
-  const handleGetPageDatas = async (newCondition?: Condition) => {
+  const handleGetPageDatas = async () => {
     const { condition, pagination } = state
-    const greCondition = newCondition || condition
-    if (greCondition !== condition) {
-      pagination.current = 1
-    }
 
     const requestData = {
-      state: JSON.stringify(greCondition.state),
-      source: greCondition.source,
-      name: greCondition.name,
-      classification_id: greCondition.classification_id ? JSON.stringify(greCondition.classification_id) : null,
+      state: JSON.stringify(condition.state),
+      source: condition.source,
+      name: condition.name,
+      classification_id: condition.classification_id ? JSON.stringify(condition.classification_id) : null,
       size: pagination.pageSize,
       page: pagination.current
     }
+
     setState((prev) => {
       return { ...prev, loading: true }
     })
@@ -244,34 +252,31 @@ const Home = () => {
         return {
           ...prev,
           loading: false,
-          useCases: data.template,
           pagination: newPagination,
           visible: false,
           subDrawer: {
             title: '',
             width: '60%',
             component: null
-          },
-          greCondition
+          }
         }
       })
+      return data.template
     } else {
       setState((prev) => {
         return { ...prev, loading: false }
       })
+      return []
     }
   }
 
   useEffect(() => {
     utils.operate.setDocumentTitle('基础用例库管理')
     handleSetColumns()
-    handleGetPageDatas()
-    handleInitSetting()
   }, [])
 
   // 操作
   const handleOperate = async (type?: string, record?: UseCase) => {
-    const { classifications } = state
     switch (type) {
       case 'create':
         setState((prev) => {
@@ -281,7 +286,13 @@ const Home = () => {
             subDrawer: {
               title: '新增用例',
               width: '60%',
-              component: <CreateUnit classifications={classifications} onCallbackParent={handleGetPageDatas} />
+              component: (
+                <CreateUnit
+                  classifications={classificationsQuery.data || []}
+                  qiniuToken={qiniuTokenQuery.data}
+                  onCallbackParent={refetch}
+                />
+              )
             }
           }
         })
@@ -298,14 +309,17 @@ const Home = () => {
                 component: (
                   <UpdateUnit
                     useCase={record}
-                    classifications={classifications}
-                    onCallbackParent={handleGetPageDatas}
+                    classifications={classificationsQuery.data || []}
+                    onCallbackParent={refetch}
                   />
                 )
               }
             }
           })
         }
+        break
+      case 'detail':
+        Router.push({ pathname: `/useCase/${record?.id}` })
         break
       default:
         setState((prev) => {
@@ -327,7 +341,6 @@ const Home = () => {
    * 下载
    */
   const handleDownload = async (type: string, record: UseCase) => {
-    const { qiniuToken } = state
     setState((prev) => {
       return { ...prev, loading: true }
     })
@@ -341,17 +354,19 @@ const Home = () => {
     if (errcode === 0) {
       const dateTime = new Date()
       const timeout = new Date(dateTime.setDate(dateTime.getDate() + 1)).getTime()
-      open(`${data.url}?e=${timeout}&token=${qiniuToken}&attname=${rename}`, '_self')
+      open(`${data.url}?e=${timeout}&token=${qiniuTokenQuery.data}&attname=${rename}`, '_self')
     }
   }
 
   // 分页、排序、筛选变化
   const handleTableChange = (pagination: TablePaginationConfig, extraAction: string) => {
     if (extraAction === 'paginate') {
+      const { condition } = state
       //  分页
       setState((prev) => {
         return {
           ...prev,
+          condition: { ...condition, count: condition.count + 1 },
           pagination: {
             ...pagination,
             showTotal: (total: number) => {
@@ -360,7 +375,6 @@ const Home = () => {
           }
         }
       })
-      handleGetPageDatas()
     }
   }
 
@@ -386,9 +400,13 @@ const Home = () => {
             }}
             handleOperate={handleOperate}
             selectedKeys={state.selectedKeys}
-            classifications={state.classifications}
+            classifications={classificationsQuery.data || []}
             condition={state.condition}
-            onCallbackParent={handleGetPageDatas}
+            onCallbackParent={(condition) => {
+              setState((prev) => {
+                return { ...prev, condition, pagination: { ...prev.pagination, current: 1 } }
+              })
+            }}
           />
         </div>
       </div>
@@ -401,9 +419,9 @@ const Home = () => {
         }}
         className="d-table-center-container"
         columns={state.columns}
-        dataSource={state.useCases}
+        dataSource={useCases}
         rowKey={(record) => record.id}
-        loading={state.loading}
+        loading={isLoading}
         bordered
         pagination={state.pagination}
         onChange={(pagination, filters, sorter, extra) => handleTableChange(pagination, extra.action)}

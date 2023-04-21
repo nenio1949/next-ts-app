@@ -1,10 +1,12 @@
 import React from 'react'
 
 export interface Condition {
-  state?: string
+  // 请求次数（以此来防止同样条件不请求）
+  count: number
+  state?: string[]
   source?: string
   name?: string
-  classification_id?: number
+  classification_id?: number | null
 }
 
 export interface DisabledStateText {
@@ -16,14 +18,12 @@ export interface IStates {
   visible: boolean
   loading: boolean
   hasOperateAuth: boolean
-  classifications: Array<Classification>
-  qiniuToken: string | undefined
-  useCases: Array<UseCase>
+  // classifications: Array<Classification>
+  // qiniuToken: string | undefined
+  // useCases: Array<UseCase>
   columns: Array<object>
   pagination: TablePaginationConfig
-  condition: {
-    [key: string]: string | Array<string> | number | null
-  }
+  condition: Condition
   subDrawer: {
     title: string
     width: string | number

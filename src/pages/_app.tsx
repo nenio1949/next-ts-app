@@ -6,6 +6,7 @@ import stores from '@/stores'
 import type { NextPage } from 'next'
 import StoreContext from '@/stores/context'
 import Layout from '@/components/layout'
+import { QueryClientProvider, QueryClient } from 'react-query'
 import '@/assets/css/app.scss'
 import 'antd/dist/reset.css'
 
@@ -19,9 +20,18 @@ type AppPropsWithLayout = AppProps & {
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.noLayout ? (page: ReactElement) => page : (page: ReactElement) => <Layout>{page}</Layout>
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false // 关闭窗口焦点影响数据刷新
+      }
+    }
+  })
   return (
     <ConfigProvider locale={zhCN}>
-      <StoreContext.Provider value={stores}>{getLayout(<Component {...pageProps} />)}</StoreContext.Provider>
+      <QueryClientProvider client={queryClient}>
+        <StoreContext.Provider value={stores}>{getLayout(<Component {...pageProps} />)}</StoreContext.Provider>
+      </QueryClientProvider>
     </ConfigProvider>
   )
 }
