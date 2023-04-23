@@ -3,7 +3,7 @@
  * @Author: yong.li
  * @Date: 2022-02-07 14:30:11
  * @LastEditors: yong.li
- * @LastEditTime: 2023-04-21 14:30:05
+ * @LastEditTime: 2023-04-23 09:28:16
  */
 
 import { useEffect, useState } from 'react'
@@ -17,7 +17,7 @@ import UseCaseUpload from '@/components/upload/useCaseUpload'
 import { Classification } from './type'
 import { Extra } from '@/components/upload/type'
 import GConfig from '@/config/global'
-import { useQuery } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 
 const { Option } = Select
 
@@ -84,56 +84,96 @@ const Home = (props: IPorps) => {
     }
     return upload(file, key, qiniuToken || qiniuTokenQuery.data || '', putExtra, config)
   }
-  // 提交
-  const handleSubmit = async (values: FormParams) => {
-    const file = values.file[0]
-    setLoading(true)
-    if (file && file.originFileObj) {
-      customUploadFile(file.originFileObj).subscribe({
-        error: (err) => {
-          if (err.message === 'expired token') {
-            message.error('token失效，请刷新页面重试！', 3)
-          } else {
-            message.error(err.message, 3)
-          }
-          setLoading(false)
-        },
-        complete: async (e) => {
-          const changeFiles = fileList.map((file) => {
-            return { name: file.name, url: file.url }
-          })
-          const file = `${GConfig.docHost}/${e.key}`
-          const parma = { ...values }
-          const datas = {
-            ...parma,
-            file,
-            changeFiles
-          }
-          const { errcode, msg }: ApiResponse = await api.createUseCase(datas)
-          if (errcode === 0) {
-            message.success({ content: msg, duration: 3 })
-            if (onCallbackParent) {
-              onCallbackParent()
+
+  const mutation = useMutation({
+    mutationFn: async (values: FormParams) => {
+      const file = values.file[0]
+      setLoading(true)
+      if (file && file.originFileObj) {
+        customUploadFile(file.originFileObj).subscribe({
+          error: (err) => {
+            if (err.message === 'expired token') {
+              message.error('token失效，请刷新页面重试！', 3)
+            } else {
+              message.error(err.message, 3)
             }
+            setLoading(false)
+          },
+          complete: async (e) => {
+            const changeFiles = fileList.map((file) => {
+              return { name: file.name, url: file.url }
+            })
+            const file = `${GConfig.docHost}/${e.key}`
+            const parma = { ...values }
+            const datas = {
+              ...parma,
+              file,
+              changeFiles
+            }
+            const { errcode, msg }: ApiResponse = await api.createUseCase(datas)
+            if (errcode === 0) {
+              message.success({ content: msg, duration: 3 })
+              if (onCallbackParent) {
+                onCallbackParent()
+              }
+            }
+            setLoading(false)
           }
-          setLoading(false)
-        }
-      })
+        })
+      }
     }
-  }
+  })
+
+  // 提交
+  // const handleSubmit = async (values: FormParams) => {
+  //   const file = values.file[0]
+  //   setLoading(true)
+  //   if (file && file.originFileObj) {
+  //     customUploadFile(file.originFileObj).subscribe({
+  //       error: (err) => {
+  //         if (err.message === 'expired token') {
+  //           message.error('token失效，请刷新页面重试！', 3)
+  //         } else {
+  //           message.error(err.message, 3)
+  //         }
+  //         setLoading(false)
+  //       },
+  //       complete: async (e) => {
+  //         const changeFiles = fileList.map((file) => {
+  //           return { name: file.name, url: file.url }
+  //         })
+  //         const file = `${GConfig.docHost}/${e.key}`
+  //         const parma = { ...values }
+  //         const datas = {
+  //           ...parma,
+  //           file,
+  //           changeFiles
+  //         }
+  //         const { errcode, msg }: ApiResponse = await api.createUseCase(datas)
+  //         if (errcode === 0) {
+  //           message.success({ content: msg, duration: 3 })
+  //           if (onCallbackParent) {
+  //             onCallbackParent()
+  //           }
+  //         }
+  //         setLoading(false)
+  //       }
+  //     })
+  //   }
+  // }
   // 七牛文件上传回调
   const qiniuUploadCallback = (fileList: UploadFile[]) => {
     setFileList(fileList)
   }
   return (
-    <Spin spinning={loading}>
+    <Spin spinning={mutation.isLoading || loading}>
       {hasTaskProcessQuery.data?.data.generateFile && (
         <Alert message="存在未完成的用例库文件解析任务，请稍后再新增！" type="warning" />
       )}
       <Form
         form={form}
         name="create"
-        onFinish={handleSubmit}
+        onFinish={mutation.mutateAsync}
         scrollToFirstError
         {...{
           labelCol: {
@@ -211,8 +251,8 @@ const Home = (props: IPorps) => {
           <Button
             type="primary"
             htmlType="submit"
-            loading={loading}
-            disabled={loading || hasTaskProcessQuery.data?.data.generateFile}
+            loading={mutation.isLoading || loading}
+            disabled={mutation.isLoading || loading || hasTaskProcessQuery.data?.data.generateFile}
           >
             提交
           </Button>

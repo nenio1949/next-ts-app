@@ -3,7 +3,7 @@
  * @Author: yong.li
  * @Date: 2022-02-07 14:30:48
  * @LastEditors: yong.li
- * @LastEditTime: 2023-04-21 14:19:51
+ * @LastEditTime: 2023-04-23 09:21:07
  */
 
 import { useState, useEffect } from 'react'
@@ -14,7 +14,7 @@ import QiNiuUpload from '@/components/upload/qiniuUpload'
 import api from '@/services/api'
 import { Classification, UseCase } from './type'
 import GConfig from '@/config/global'
-import { useQuery } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 
 interface IProps {
   classifications: Classification[]
@@ -56,29 +56,54 @@ const UpdateUnit = (props: IProps) => {
     setFileList([...useCase.changeFiles])
   }, [useCase, classifications, form])
 
-  // 提交
-  const handleSubmit = async (values: UpdateParams) => {
-    const datas = {
-      ...values,
-      changeFiles: JSON.stringify(
-        fileList.map((file: UploadFile) => {
-          return { name: file.name, url: file.url }
-        })
-      )
-    }
+  const mutation = useMutation({
+    mutationFn: async (values: UpdateParams) => {
+      const datas = {
+        ...values,
+        changeFiles: JSON.stringify(
+          fileList.map((file: UploadFile) => {
+            return { name: file.name, url: file.url }
+          })
+        )
+      }
+      const { errcode }: ApiResponse = await api.updateUseCase(useCase.id, datas)
+      if (errcode === 0) {
+        message.success('更新成功！')
 
-    setLoading(true)
-    const { errcode }: ApiResponse = await api.updateUseCase(useCase.id, datas)
-    setLoading(false)
-
-    if (errcode === 0) {
-      message.success('更新成功！')
-
-      if (onCallbackParent) {
-        onCallbackParent()
+        if (onCallbackParent) {
+          onCallbackParent()
+        }
+        return true
+      }
+      {
+        return false
       }
     }
-  }
+  })
+
+  // 提交
+  // const handleSubmit = async (values: UpdateParams) => {
+  //   const datas = {
+  //     ...values,
+  //     changeFiles: JSON.stringify(
+  //       fileList.map((file: UploadFile) => {
+  //         return { name: file.name, url: file.url }
+  //       })
+  //     )
+  //   }
+
+  //   setLoading(true)
+  //   const { errcode }: ApiResponse = await api.updateUseCase(useCase.id, datas)
+  //   setLoading(false)
+
+  //   if (errcode === 0) {
+  //     message.success('更新成功！')
+
+  //     if (onCallbackParent) {
+  //       onCallbackParent()
+  //     }
+  //   }
+  // }
 
   // 七牛文件上传回调
   const qiniuUploadCallback = (fileList: UploadFile[]) => {
@@ -86,11 +111,11 @@ const UpdateUnit = (props: IProps) => {
   }
 
   return (
-    <Spin spinning={loading}>
+    <Spin spinning={mutation.isLoading || loading}>
       <Form
         form={form}
         name="update"
-        onFinish={handleSubmit}
+        onFinish={mutation.mutateAsync}
         scrollToFirstError
         {...{
           labelCol: {
@@ -154,7 +179,12 @@ const UpdateUnit = (props: IProps) => {
           />
         </Form.Item>
         <div className="d-drawer-footer-sticky">
-          <Button type="primary" htmlType="submit" loading={loading} disabled={loading}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={mutation.isLoading || loading}
+            disabled={mutation.isLoading || loading}
+          >
             提交
           </Button>
         </div>

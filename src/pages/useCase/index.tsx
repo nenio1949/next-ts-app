@@ -3,7 +3,7 @@
  * @Author: yong.li
  * @Date: 2022-02-07 14:23:27
  * @LastEditors: yong.li
- * @LastEditTime: 2023-04-21 17:30:03
+ * @LastEditTime: 2023-04-23 09:02:21
  */
 import React, { useState, useEffect, ReactNode } from 'react'
 import { Table, Button, Tag, Dropdown } from 'antd'
@@ -80,7 +80,7 @@ const Home = () => {
     data: useCases,
     refetch
   } = useQuery({
-    queryKey: ['useCases', { condition: state.condition }], // 查询依赖condition、pagination变量
+    queryKey: ['useCases', { condition: state.condition }], // 查询依赖condition变量
     queryFn: () => handleGetPageDatas()
   })
 
